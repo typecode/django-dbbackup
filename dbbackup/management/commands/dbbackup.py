@@ -7,6 +7,7 @@ import re
 import datetime
 import tempfile
 import gzip
+import time
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
@@ -58,9 +59,13 @@ class Command(LabelCommand):
     def save_new_backup(self, database, database_name):
         """ Save a new backup file. """
         print("Backing Up Database: %s" % database['NAME'])
-        filename = database_name + ".backup"
+        filename = '{servername}-{database_name}-{timestamp}.{backup_extension}'.format(
+                servername=self.servername,
+                database_name=database_name,
+                timestamp=time.strftime("%Y%m%d-%H%M%S"),
+                backup_extension=self.backup_extension
+            )
         outputfile = tempfile.SpooledTemporaryFile(max_size=10 * 1024 * 1024)
-        #outputfile.name = self.dbcommands.filename(self.servername)
         self.dbcommands.run_backup_commands(outputfile)
         if self.compress:
             compressed_file = self.compress_file(outputfile)
