@@ -39,7 +39,7 @@ class Command(LabelCommand):
             self.clean = options.get('clean')
             self.clean_keep = getattr(settings, 'DBBACKUP_CLEANUP_KEEP', 10)
             self.database = options.get('database')
-            self.servername = options.get('servername')
+            self.servername = options.get('servername') or 'local'
             self.backup_extension = options.get('backup-extension') or 'backup'
             self.compress = options.get('compress')
             self.encrypt = options.get('encrypt')
